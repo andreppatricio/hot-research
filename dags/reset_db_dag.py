@@ -3,7 +3,7 @@ import psycopg2
 
 from airflow.decorators import dag, task
 
-import databases
+import task_functions as tf
 
 
 ##### SQL queries ##################
@@ -23,7 +23,6 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-conn_params = databases.get_connection_params()
 
 @dag(
     description='Dag to reset Database',
@@ -35,7 +34,7 @@ conn_params = databases.get_connection_params()
 def reset_db_dag():
 
     @task()
-    def reset_db_task():
+    def reset_db_task(conn_params):
         conn = psycopg2.connect(**conn_params)
         conn.autocommit = True
         with conn:
@@ -43,7 +42,8 @@ def reset_db_dag():
                 cursor.execute(RESET_DB_QUERY)
         conn.close()
 
-    reset_db_task()
+    conn_params = tf.get_connection_params_task()
+    reset_db_task(conn_params)
 
 reset_db_dag()
 
