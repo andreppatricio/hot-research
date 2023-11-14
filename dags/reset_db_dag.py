@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
-
-from airflow import DAG
-from airflow.operators.postgres_operator import PostgresOperator
-from airflow.decorators import dag, task
 import psycopg2
+
+from airflow.decorators import dag, task
+
 import databases
 
 
@@ -18,10 +17,6 @@ RESET_DB_QUERY = """
 
 """
 
-# postgres_connection_id = 'postgres_paper_db_connection'
-
-##### DAG args ##############333
-
 default_args = {
     'owner': 'alex',
     'retries': 5,
@@ -33,7 +28,7 @@ conn_params = databases.get_connection_params()
 @dag(
     description='Dag to reset Database',
     start_date= datetime(2020, 2, 2),
-    schedule="@once", # Sunday at 00:00
+    schedule="@once",
     catchup=False,
     default_args=default_args
 )

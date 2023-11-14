@@ -1,30 +1,20 @@
-from airflow.decorators import dag, task
-
 from datetime import datetime, timedelta
-
 import os
+
+from airflow.decorators import dag, task
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+
 import core_api
-
-from task_functions import filter_english_titles_task, construct_paper_table_task, \
-                                    construct_journal_table_task, construct_author_table_task, \
-                                    insert_in_db_task, save_file
-from task_functions import get_connection_params_task, create_pool_func
-
-from airflow.models import Pool
-import psycopg2
 import databases
+import task_functions as tf
 
 
 pool_name = 'query_core_api_pool'
-create_pool_func(pool_name, 'Pool to limit queries to the CORE API', slots=1)
+tf.create_pool_func(pool_name, 'Pool to limit queries to the CORE API', slots=1)
 
 API_NAME = 'core'
 files_to_delete = []
 
-
-
-##### DAG args ##############333
 
 default_args = {
     'owner': 'alex',
@@ -50,14 +40,11 @@ def core_api_tf():
     @task()
     def define_date_interval(**kwargs):
         logical_date = kwargs['logical_date'].date()
-        print("logical date", logical_date)
         # Calculate the start of the current week (Monday)
         week_start = logical_date - timedelta(days=logical_date.weekday())
-        print("week start", week_start)
 
         # Calculate the end of this week (Sunday)
         week_end = week_start + timedelta(days=6)
-        print("week end", week_end)
 
         return {'start_date': week_start.strftime("%Y-%m-%d"),
                 'end_date': week_end.strftime("%Y-%m-%d")}
@@ -67,7 +54,7 @@ def core_api_tf():
     def get_api_data_task(dates):
         results = core_api.get_api_data(dates)
         response_json = {'results': results}
-        results_file_name = save_file(response_json, 'core_api_response.json', add_id=True)
+        results_file_name = tf.save_file(response_json, 'core_api_response.json', add_id=True)
         return results_file_name
 
 
@@ -95,10 +82,8 @@ def core_api_tf():
 
     @task()
     def cleanup_files(files_to_delete: list):
-        print("Cleaning UP these files: ", files_to_delete)
         for file in files_to_delete:
             if file is not None and os.path.exists(file):
-                print("Removing: ", file)
                 os.remove(file)
 
 
@@ -109,16 +94,14 @@ def core_api_tf():
 
         api_data_file = get_api_data_task(dates)
 
-        filtered_api_data_file = filter_english_titles_task(api_data_file, API_NAME)
-        paper_df_file = construct_paper_table_task(filtered_api_data_file, API_NAME)
-        author_df_file = construct_author_table_task(filtered_api_data_file, API_NAME)
-        journal_df_file = construct_journal_table_task(filtered_api_data_file, API_NAME)
+        filtered_api_data_file = tf.filter_english_titles_task(api_data_file, API_NAME)
+        paper_df_file = tf.construct_paper_table_task(filtered_api_data_file, API_NAME)
+        author_df_file = tf.construct_author_table_task(filtered_api_data_file, API_NAME)
+        journal_df_file = tf.construct_journal_table_task(filtered_api_data_file, API_NAME)
         
         df_files = {'paper': paper_df_file, 'author': author_df_file, 'journal': journal_df_file}
-        conn_params = get_connection_params_task()
-        create_schema_task() >> create_tables_task() >> insert_in_db_task(df_files, conn_params) >> trigger_arxiv_dag_task(dates)
-
-        # trigger_arxiv_dag(dates)
+        conn_params = tf.get_connection_params_task()
+        create_schema_task() >> create_tables_task() >> tf.insert_in_db_task(df_files, conn_params) >> trigger_arxiv_dag_task(dates)
 
         files_to_delete.extend([api_data_file, filtered_api_data_file, 
                                 paper_df_file, author_df_file, journal_df_file])

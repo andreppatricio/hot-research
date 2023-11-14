@@ -1,9 +1,9 @@
 import requests
 import time
+import os
 from typing import Callable, List, Tuple
 
-# TODO: hide credentials
-CORE_API_KEY = "UsE6ibdfpg29GtwDLThxZVB51Cl0WNvm"
+CORE_API_KEY = start_date_str = os.environ.get('CORE_API_KEY')
 
 api_endpoint = "https://api.core.ac.uk/v3/"
 
@@ -71,9 +71,9 @@ def scroll(url_fragment: str, query: str, extract_info_callback: Callable, sleep
     count = 0
     scrollId=None
     while True:
-        result, elapsed =query_api(search_url, query, scrollId)
+        result, elapsed = query_api(search_url, query, scrollId)
         scrollId=result["scrollId"]
-        totalhits = result["totalHits"]
+        # totalhits = result["totalHits"]
         result_size = len(result["results"])
         if result_size==0:
             break
@@ -82,7 +82,6 @@ def scroll(url_fragment: str, query: str, extract_info_callback: Callable, sleep
             if info is not None:
                 allresults.append(info)
         count+=result_size
-        # print(f"{count}/{totalhits} {elapsed}s")
         time.sleep(sleep)
     return allresults
 
@@ -118,7 +117,6 @@ def get_api_data(dates: dict) -> List[dict]:
     
     # Query API
     start_date, end_date = dates['start_date'], dates['end_date']
-    print(f"Getting CORE data for date interval: {start_date} - {end_date}")
 
     date_variable = 'publishedDate'
     query = f"{date_variable}>={start_date} AND {date_variable}<={end_date}"

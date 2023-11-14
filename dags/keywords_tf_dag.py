@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta
 import os
-import databases
-import task_functions
-import processing
-from task_functions import get_connection_params_task
 
 from airflow.decorators import dag, task
+
+import databases
+import processing
+import task_functions as tf
 
 
 
 files_to_delete = []
 
-##### DAG args ##############333
 
 default_args = {
     'owner': 'alex',
@@ -39,37 +38,35 @@ def keywords_dag_tf():
     def get_titles(dates, conn_params: dict):
         results = databases.get_titles_from_db(dates, conn_params)
         results_json = {'titles': results}
-        results_file_name = task_functions.save_file(results_json, 'titles.json', add_id=True)
+        results_file_name = tf.save_file(results_json, 'titles.json', add_id=True)
         return results_file_name
     
     @task()
     def extract_ngram_keywords(titles_file, n, n_top_keywords=100):
-        titles = task_functions.load_json(titles_file)
+        titles = tf.load_json(titles_file)
         titles = titles['titles']
         keywords_dict = processing.extract_ngram_keywords(titles, n, n_top_keywords)
 
-        results_file_name = task_functions.save_file(keywords_dict, f'top_{n}_grams.json', add_id=True)
+        results_file_name = tf.save_file(keywords_dict, f'top_{n}_grams.json', add_id=True)
         return results_file_name
 
     @task()
     def insert_keywords_db(keywords_file: str, dates, n, conn_params: dict):
-        keywords_dict = task_functions.load_json(keywords_file)
+        keywords_dict = tf.load_json(keywords_file)
         databases.insert_keywords_in_db(keywords_dict, dates, n, conn_params)
 
 
     @task()
     def cleanup_files(files_to_delete: list):
-        print("Cleaning UP these files: ", files_to_delete)
         for file in files_to_delete:
             if os.path.exists(file):
-                print("Removing: ", file)
                 os.remove(file)
 
     # ----------------------------------- #
 
     with cleanup_files(files_to_delete).as_teardown():
         dates = get_date_interval()
-        conn_params = get_connection_params_task()
+        conn_params = tf.get_connection_params_task()
         titles_file = get_titles(dates, conn_params)
         files_to_delete.append(titles_file)
         one_gram_file = extract_ngram_keywords(titles_file, n=1, n_top_keywords=200)

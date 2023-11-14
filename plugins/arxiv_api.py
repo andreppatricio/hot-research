@@ -3,11 +3,9 @@ import urllib
 import feedparser
 from datetime import datetime
 import time
-import pandas as pd
 from typing import Dict
 
 
-# Base api query url
 API_NAME = 'arxiv'
 BASE_URL = 'http://export.arxiv.org/api/query?'
 
@@ -30,13 +28,10 @@ def request_api(url_str: str) -> feedparser.FeedParserDict:
         >> response.entries[0]['title']
         'Example Title'
     """
-    print(url_str)
     with libreq.urlopen(url_str) as url:
         response = url.read()
         response_code = url.getcode()
     feed = feedparser.parse(response)
-    # print(response_code)
-    # print(feed.entries)
 
     if response_code != 200:  # Not successful
         msg = feed.entries[0].summary if len(feed.entries) == 1  else "No message"
@@ -73,39 +68,26 @@ def query_api(search_query: str, start_date, end_date, results_per_call=100, sle
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
     print(f"Start date: {start_date} | End date: {end_date}")
-    # iter_date = datetime.now()
     date_format = "%Y-%m-%dT%H:%M:%SZ"
 
-    ### Find parameter {start} for query corresponding to the desired interval
+    # Find parameter {start} for query corresponding to the desired interval
     start = 0
     while True:
-        print("\n", '*'*10)
         query = f'search_query={search_query}&start={start + results_per_call}&max_results={1}&sortBy=submittedDate&sortOrder=descending'
         feed = request_api(BASE_URL+query)
         date = datetime.strptime(feed.entries[0].published, date_format).date()
-        print(f"start={start + results_per_call} returns date {date}")
-        print(f"Is {date}  <=  {end_date} ? --> {date <= end_date}")
         if date <= end_date:
             break
         else:
             start += results_per_call
 
-    print('\nSelected Start: ', start)
 
     papers = []
     keep_going = True
     while keep_going:
-        print('*'*10)
-        print(f"Results for {start} - {start + results_per_call}")
-
         query = f'search_query={search_query}&start={start}&max_results={results_per_call}&sortBy=submittedDate&sortOrder=descending'
         # perform a GET request using the base_url and query
         feed = request_api(BASE_URL+query)
-        # DEBUG
-        d = f'start: {datetime.strptime(feed.entries[-1].published, date_format)} | end: {datetime.strptime(feed.entries[0].published, date_format)}'
-        print(f'\n{d}\n')
-        # DEBUG
-
         # Run through each entry, and print out information
         for entry in feed.entries:
             pdate = datetime.strptime(entry.published, date_format).date()
@@ -153,8 +135,6 @@ def get_api_data(dates: Dict[str, str]) -> list:
               'doi': None, 'publisher': None, 'identifiers': [], 'journals': [], 'authors': ['Arian Eamaz', 'Farhang Yeganegi', 'Mojtaba Soltanalian']}
     """
     start_date, end_date = dates['start_date'], dates['end_date']
-    print(f"Getting data for data interval: {start_date} - {end_date}")
     search_query = urllib.parse.quote("all:arxiv")
     response = query_api(search_query, start_date, end_date, results_per_call=1000, sleep_time=3)
-    print(len(response['results']))
     return response['results']

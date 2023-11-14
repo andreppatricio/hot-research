@@ -4,14 +4,13 @@ import uuid
 from typing import Union
 import os
 
-# from plugins import processing
-# from plugins import databases
 import processing
 import databases
 
 from airflow.decorators import task
 from airflow.api.common.experimental.pool import get_pool, create_pool
 from airflow.exceptions import PoolNotFound
+
 
 def load_json(filename: str) -> dict:
     """

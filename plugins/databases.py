@@ -1,5 +1,4 @@
 import psycopg2
-from airflow.providers.postgres.hooks.postgres import PostgresHook
 import os
 
 def get_connection_params():
@@ -24,12 +23,6 @@ def create_tables(conn_params: dict):
 
 
 def create_schema(conn_params: dict):
-    """
-    host="postgres",
-    database="airflow",
-    user="airflow",
-    password="airflow
-    """
     with open('sql/create_schema_papers.sql', 'r') as file:
         sql_create_schema = file.read()
 
@@ -86,7 +79,6 @@ def insert_in_db(df_dict: dict, sql_dict: dict, conn_params: dict):
                         cursor.execute(sql_dict['journal'], journal_data)
 
         except psycopg2.IntegrityError as e:
-            # Handle IntegrityError (or other exceptions) as needed
             print("IntegrityError:", e)
             conn.rollback()
     conn.close()
@@ -159,11 +151,9 @@ def insert_keywords_in_db(keywords_dict: dict, dates, n, conn_params: dict):
             with conn:
                 with conn.cursor() as cursor:
                     # Begin transaction
-                    # Insert into papers.keyword
                     cursor.execute(sql_keyword_insert, keyword_data)
 
         except psycopg2.IntegrityError as e:
-            # Handle IntegrityError (or other exceptions) as needed
             print("IntegrityError:", e)
             conn.rollback()
     conn.close()

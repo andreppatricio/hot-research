@@ -1,7 +1,6 @@
 import langdetect
 import pandas as pd
 import nltk
-# from nltk.corpus import stopwords
 from collections import Counter
 
 def filter_english_titles(api_data: dict) -> dict:
@@ -20,7 +19,7 @@ def filter_english_titles(api_data: dict) -> dict:
         >> filtered_data
         {'results': [{'title': 'English Title 1'}, {'title': 'English Title 2'}]}
     """
-    bsize = len(api_data['results'])
+    # bsize = len(api_data['results'])
     filtered_results = []
     for result in api_data['results']:
         try:
@@ -30,8 +29,6 @@ def filter_english_titles(api_data: dict) -> dict:
             continue
 
     api_data['results'] = filtered_results
-    # print(f"Size before filtering: {bsize}")
-    # print(f"Size after filtering: {len(api_data['results'])}")
     return api_data
 
 

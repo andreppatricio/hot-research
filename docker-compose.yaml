@@ -76,6 +76,7 @@ x-airflow-common:
     START_DATE: ${START_DATE}
     POSTGRES_USER: ${POSTGRES_USER}
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    CORE_API_KEY: ${CORE_API_KEY}
     
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
