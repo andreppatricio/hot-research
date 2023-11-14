@@ -1,6 +1,6 @@
 # Hot Research Data Pipeline
 
-Welcome to the Hot Research Data Pipeline project! This data engineering project extracts, processes, and visualizes information about published scientific papers from two reputable APIs, CORE and arXiv. The entire pipeline is orchestrated and automated using Apache Airflow on a weekly basis.
+Welcome to the Hot Research Data Pipeline project! This data engineering project extracts, processes, and provides visualizations for information about published scientific papers from two reputable APIs, CORE and arXiv. The entire pipeline is orchestrated and automated using Apache Airflow on a weekly basis.
 
 ---
 ![Project Diagram](hot-research-diagram.svg)
@@ -11,7 +11,7 @@ Welcome to the Hot Research Data Pipeline project! This data engineering project
 
 - **Data Extraction**: Utilizes APIs from CORE and arXiv to fetch the latest data on scientific papers.
 
-- **Data Processing**: Weekly automated process, orchestrated by Apache Airflow, includes filtering for English papers, removing stopwords and punctuation, and extracting n-grams from the text. N-grams are then stored in a Postgres database for later analysis.
+- **Data Processing**: Weekly automated process, orchestrated by Apache Airflow, includes filtering for English papers, removing stopwords and punctuation, and extracting n-grams from the text.
 
 ### Database:
 
@@ -56,7 +56,7 @@ To run the data pipeline and explore the visualizations, follow these steps:
 
 - **`/dags`**: Contains Apache Airflow DAGs for the data extraction, processing, and loading tasks.
 - **`/plugins`**: Defines necessary functionalities for the DAGs, such as API access, database access, text processing, and other tasks.
-- **`/sql`**`: SQL files with relevant queries to interact with the database.
+- **`/sql`**: SQL files with relevant queries to interact with the database.
 - **`/visualization`**: Jupyter notebooks for visualization and analysis.
 - **`/docker-compose.yml`**: Configuration file for Docker containers.
 - **`/.github/workflows`**: GitHub Actions workflow for continuous integration.
