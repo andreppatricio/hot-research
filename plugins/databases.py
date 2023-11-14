@@ -1,16 +1,9 @@
 import psycopg2
-import os
-
-def get_connection_params():
-        conn_params = {
-            "host": "postgres", 
-            "database": "airflow", 
-            "user": os.environ.get('POSTGRES_USER'), 
-            "password": os.environ.get('POSTGRES_PASSWORD')}
-        return conn_params
+import pandas as pd
+from typing import Dict
 
 
-def create_tables(conn_params: dict):
+def create_tables(conn_params: Dict[str, str]):
     with open('sql/create_tables.sql', 'r') as file:
         sql_create_tables = file.read()
 
@@ -22,7 +15,7 @@ def create_tables(conn_params: dict):
     conn.close()
 
 
-def create_schema(conn_params: dict):
+def create_schema(conn_params: Dict[str, str]):
     with open('sql/create_schema_papers.sql', 'r') as file:
         sql_create_schema = file.read()
 
@@ -34,7 +27,7 @@ def create_schema(conn_params: dict):
     conn.close()
 
 
-def insert_in_db(df_dict: dict, sql_dict: dict, conn_params: dict):
+def insert_in_db(df_dict: Dict[str, pd.DataFrame], sql_dict: Dict[str, str], conn_params: Dict[str, str]):
     """
     Insert data from DataFrames into a PostgreSQL database.
 
@@ -84,7 +77,7 @@ def insert_in_db(df_dict: dict, sql_dict: dict, conn_params: dict):
     conn.close()
 
 
-def get_titles_from_db(dates, conn_params: dict):
+def get_titles_from_db(dates: Dict[str, str], conn_params: dict):
     """
     Retrieve titles from the database based on a date range.
 
@@ -117,7 +110,7 @@ def get_titles_from_db(dates, conn_params: dict):
     return results
 
 
-def insert_keywords_in_db(keywords_dict: dict, dates, n, conn_params: dict):
+def insert_keywords_in_db(keywords_dict: dict, dates: Dict[str, str], n: int, conn_params: Dict[str, str]):
     """
     Insert keyword data into the database.
 

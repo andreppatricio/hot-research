@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import os
+from typing import Dict
 
 from airflow.decorators import dag, task
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
@@ -51,7 +52,7 @@ def core_api_tf():
 
 
     @task(pool=pool_name)
-    def get_api_data_task(dates):
+    def get_api_data_task(dates: Dict[str, str]):
         results = core_api.get_api_data(dates)
         response_json = {'results': results}
         results_file_name = tf.save_file(response_json, 'core_api_response.json', add_id=True)
@@ -71,7 +72,7 @@ def core_api_tf():
 
 
     @task()
-    def trigger_arxiv_dag_task(dates, **kwargs):
+    def trigger_arxiv_dag_task(dates: Dict[str, str], **kwargs):
         trigger_arxiv_dag_task = TriggerDagRunOperator(
                                     task_id="trigger_arxiv_dag_task",
                                     trigger_dag_id="arxiv_api_tf",     

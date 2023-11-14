@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 import uuid
-from typing import Union
+from typing import Dict, Union
 import os
 
 import processing
@@ -48,7 +48,7 @@ def save_file(data: Union[dict, pd.DataFrame] ,filename: str, add_id = True) -> 
 
 
 @task()
-def filter_english_titles_task(api_data_file: str, api_name: str):
+def filter_english_titles_task(api_data_file: str, api_name: str) -> str:
     """
     Filter English titles from API data and save the results to a file.
 
@@ -69,7 +69,7 @@ def filter_english_titles_task(api_data_file: str, api_name: str):
 
 
 @task()
-def construct_paper_table_task(api_data_file: str, api_name: str):
+def construct_paper_table_task(api_data_file: str, api_name: str) -> str:
     """
     Construct a paper table from API data and save the results to a CSV file.
 
@@ -89,7 +89,7 @@ def construct_paper_table_task(api_data_file: str, api_name: str):
     return results_file_name
 
 @task()
-def construct_author_table_task(api_data_file: str, api_name: str):
+def construct_author_table_task(api_data_file: str, api_name: str) -> str:
     """
     Construct an author table from API data and save the results to a CSV file.
 
@@ -109,7 +109,7 @@ def construct_author_table_task(api_data_file: str, api_name: str):
     return results_file_name
 
 @task()
-def construct_journal_table_task(api_data_file: str, api_name: str):
+def construct_journal_table_task(api_data_file: str, api_name: str) -> str:
     """
     Construct a journal table from API data and save the results to a CSV file.
 
@@ -129,7 +129,7 @@ def construct_journal_table_task(api_data_file: str, api_name: str):
     return results_file_name
 
 @task()
-def insert_in_db_task(df_files: dict, conn_params: dict):
+def insert_in_db_task(df_files: dict, conn_params: dict) -> str:
     """
     Insert data from CSV files into a PostgreSQL database.
 
@@ -152,7 +152,7 @@ def insert_in_db_task(df_files: dict, conn_params: dict):
 
 
 @task()
-def get_connection_params_task():
+def get_connection_params_task() -> Dict[str, str]:
         conn_params = {
             "host": "postgres", 
             "database": "airflow", 

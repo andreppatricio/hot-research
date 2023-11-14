@@ -1,3 +1,4 @@
+from typing import List
 import langdetect
 import pandas as pd
 import nltk
@@ -32,7 +33,7 @@ def filter_english_titles(api_data: dict) -> dict:
     return api_data
 
 
-def construct_paper_table(api_data: list) -> pd.DataFrame:
+def construct_paper_table(api_data: List[dict]) -> pd.DataFrame:
     """
     Construct a pandas DataFrame for paper data from API data.
 
@@ -75,7 +76,7 @@ def construct_paper_table(api_data: list) -> pd.DataFrame:
     return df
 
 
-def construct_author_table(api_data: list) -> pd.DataFrame:
+def construct_author_table(api_data: List[dict]) -> pd.DataFrame:
     """
     Construct a pandas DataFrame for author data from API data.
 
@@ -103,7 +104,7 @@ def construct_author_table(api_data: list) -> pd.DataFrame:
     return df
 
 
-def construct_journal_table(api_data: list) -> pd.DataFrame:
+def construct_journal_table(api_data: List[dict]) -> pd.DataFrame:
     """
     Construct a pandas DataFrame for journal data from API data.
 
@@ -151,7 +152,7 @@ def get_nltk_stopwords(language: str):
 
 
 
-def extract_ngram_keywords(titles, n, n_top_keywords=100) -> dict:
+def extract_ngram_keywords(titles: List[str], n: int, n_top_keywords=100) -> dict:
     """
     Extract n-gram keywords from a list of titles.
 

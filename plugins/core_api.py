@@ -1,7 +1,7 @@
 import requests
 import time
 import os
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Dict
 
 CORE_API_KEY = start_date_str = os.environ.get('CORE_API_KEY')
 
@@ -86,7 +86,7 @@ def scroll(url_fragment: str, query: str, extract_info_callback: Callable, sleep
     return allresults
 
 
-def get_api_data(dates: dict) -> List[dict]:
+def get_api_data(dates: Dict[str, str]) -> List[dict]:
     """
     Get data from the CORE API within the specified date range.
 
@@ -106,7 +106,7 @@ def get_api_data(dates: dict) -> List[dict]:
                 'title': 'Mary, the Holy Mother of God/World Day of Peace - 1 January 2023', 'publishedDate': '2023-11-07T08:00:00', 'publisher': 'ResearchOnline@ND', 'journals': []}
 
     """
-    def get_table_cols(hit):
+    def get_table_cols(hit: dict):
         if hit['language'] is None or hit['language']['code'] == 'en':
             fields_to_keep = ['id', 'title', 'doi', 'publishedDate', 'publisher', 'authors', 'journals', 'identifiers']
             result = {k:v for k,v in hit.items() if k in fields_to_keep}

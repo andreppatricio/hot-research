@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import os
+from typing import Dict
 
 from airflow.decorators import dag, task
 
@@ -35,14 +36,14 @@ def keywords_dag_tf():
         return {'start_date': start_date, 'end_date': end_date}
     
     @task()
-    def get_titles(dates, conn_params: dict):
+    def get_titles(dates: Dict[str, str], conn_params: Dict[str, str]):
         results = databases.get_titles_from_db(dates, conn_params)
         results_json = {'titles': results}
         results_file_name = tf.save_file(results_json, 'titles.json', add_id=True)
         return results_file_name
     
     @task()
-    def extract_ngram_keywords(titles_file, n, n_top_keywords=100):
+    def extract_ngram_keywords(titles_file: str, n: int, n_top_keywords=100):
         titles = tf.load_json(titles_file)
         titles = titles['titles']
         keywords_dict = processing.extract_ngram_keywords(titles, n, n_top_keywords)
@@ -51,7 +52,7 @@ def keywords_dag_tf():
         return results_file_name
 
     @task()
-    def insert_keywords_db(keywords_file: str, dates, n, conn_params: dict):
+    def insert_keywords_db(keywords_file: str, dates: Dict[str, str], n: int, conn_params: dict):
         keywords_dict = tf.load_json(keywords_file)
         databases.insert_keywords_in_db(keywords_dict, dates, n, conn_params)
 

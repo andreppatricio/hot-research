@@ -42,7 +42,7 @@ def request_api(url_str: str) -> feedparser.FeedParserDict:
         return feed
 
 
-def query_api(search_query: str, start_date, end_date, results_per_call=100, sleep_time=3) -> dict:
+def query_api(search_query: str, start_date: str, end_date: str, results_per_call=100, sleep_time=3) -> dict:
     """
     Query the specified API for data within a date range.
 
