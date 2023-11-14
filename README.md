@@ -1,6 +1,6 @@
 # Hot Research Data Pipeline
 
-Welcome to the Hot Research Data Pipeline project! This data engineering project extracts, processes, and provides visualizations for information about published scientific papers from two reputable APIs, CORE and arXiv. The entire pipeline is orchestrated and automated on a weekly basis using Apache Airflow.
+Welcome to the Hot Research Data Pipeline project! This data engineering project extracts, processes, and provides visualizations for information about published scientific papers from two APIs, CORE and arXiv. The entire pipeline is orchestrated and automated on a weekly basis using Apache Airflow.
 
 ---
 ![Project Diagram](images/hot-research-diagram.svg)
@@ -19,13 +19,13 @@ Welcome to the Hot Research Data Pipeline project! This data engineering project
 
 ### Visualization:
 
-- **Jupyter Notebooks**: Utilizes Jupyter notebooks for visualization purposes, offering both standard and interactive options.
+- **Jupyter Notebooks**: Utilizes Jupyter Notebooks for visualization purposes, offering both standard and interactive options.
 
 - **Interactive Visualizations**: Enables live visualization of the entire database with dynamic plot parameter adjustments.
 
 - **N-gram Analysis**: Emphasizes the analysis of n-grams to identify popular keywords in scientific papers, providing insights into trending topics.
 
-- **PySpark Integration**: For expedited data retrieval, PySpark is used to read data from the database during the visualization process.
+- **PySpark Integration**: PySpark is further used for expedited data retrieval during the visualization process.
 
 ### Containerization:
 
@@ -64,31 +64,29 @@ To run the data pipeline, extract valuable insights, and explore visualizations,
 6. **Explore Visualizations:**
 
    - **Static Plots:**
-     - Open the Jupyter notebook `/visualization/visualizations.ipynb` to view the static plots.
+     - Open the Jupyter Notebook `/visualization/visualizations.ipynb` to view the static plots.
 
    - **Interactive Plots:**
      - Once the DAGs have completed their tasks, access the Jupyter server running locally at `localhost:8888`.
-     - Utilize the Jupyter notebook `/visualization/interactive_visualizations.ipynb` to explore interactive plots.
+     - Utilize the Jupyter Notebook `/visualization/interactive_visualizations.ipynb` to explore interactive plots.
      - Adjust parameters within the notebook to dynamically select and display specific data.
 
-By following these steps, you can run the entire project locally, extract meaningful insights from scientific paper data, and explore both pre-computed and interactive visualizations.
+By following these steps, you can run the entire project locally, extract meaningful insights from scientific paper data, and explore both static and interactive visualizations.
 
 ## Interactive Visualization Example
 
-
+![Interactive barplot](https://github.com/andreppatricio/hot-research/blob/main/images/barplot-interactive.gif)
+![Interactive lineplot](https://github.com/andreppatricio/hot-research/blob/main/images/lineplot-interactive.gif)
 
 ## Project Structure:
 
 - **`/dags`**: Contains Apache Airflow DAGs for the data extraction, processing, and loading tasks.
 - **`/plugins`**: Defines necessary functionalities for the DAGs, such as API access, database access, text processing, and other tasks.
 - **`/sql`**: SQL files with relevant queries to interact with the database.
-- **`/visualization`**: Jupyter notebooks for visualization and analysis.
+- **`/visualization`**: Jupyter Notebooks for visualization and analysis.
 - **`/docker-compose.yml`**: Configuration file for Docker containers.
 - **`/.github/workflows`**: GitHub Actions workflow for continuous integration.
 
-## Acknowledgments:
-
-We appreciate the contributions of the CORE and arXiv APIs, enabling access to valuable scientific paper data.
 
 Feel free to explore the project!
 
