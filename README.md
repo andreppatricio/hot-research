@@ -3,7 +3,7 @@
 Welcome to the Hot Research Data Pipeline project! This data engineering project extracts, processes, and provides visualizations for information about published scientific papers from two reputable APIs, CORE and arXiv. The entire pipeline is orchestrated and automated on a weekly basis using Apache Airflow.
 
 ---
-![Project Diagram](hot-research-diagram.svg)
+![Project Diagram](images/hot-research-diagram.svg)
 ---
 
 ## Keypoints:
@@ -72,6 +72,10 @@ To run the data pipeline, extract valuable insights, and explore visualizations,
      - Adjust parameters within the notebook to dynamically select and display specific data.
 
 By following these steps, you can run the entire project locally, extract meaningful insights from scientific paper data, and explore both pre-computed and interactive visualizations.
+
+## Interactive Visualization Example
+
+
 
 ## Project Structure:
 
