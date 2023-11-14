@@ -5,11 +5,6 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 # Add the parent directory to the Python path
 sys.path.append(parent_dir)
 
-import pytest
-import pandas as pd
-import nltk
-# from unittest.mock import patch, MagicMock
-import plugins
 from plugins.processing import (
     filter_english_titles,
     construct_paper_table,

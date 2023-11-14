@@ -162,6 +162,6 @@ def get_connection_params_task():
 
 def create_pool_func(name: str, description: str, slots: int):
     try:
-        existing_pool = get_pool(name=name)
+        _ = get_pool(name=name)
     except PoolNotFound:
-        pool = create_pool(name=name, slots=slots, description=description)
+        create_pool(name=name, slots=slots, description=description)
