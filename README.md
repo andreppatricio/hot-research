@@ -41,16 +41,37 @@ Welcome to the Hot Research Data Pipeline project! This data engineering project
 
 ---
 
-## Getting Started:
+## Getting Started and Visualizing the Data:
 
-To run the data pipeline and explore the visualizations, follow these steps:
+To run the data pipeline, extract valuable insights, and explore visualizations, follow these steps:
 
-1. Clone the repository.
-2. Navigate to the project directory.
-3. Set environment variables in the `.env` file.
-4. Run `docker-compose up` to start the containers.
-5. Access the Apache Airflow Web UI at `localhost:8080`.
-6. Access the Jupyter notebooks for visualizations and analysis at `localhost:8888`.
+1. **Clone the Repository:**
+   - Use `git clone` to clone the repository to your local machine.
+
+2. **Navigate to the Project Directory:**
+   - Open a terminal and move to the project directory using `cd`.
+
+3. **Set Environment Variables:**
+   - Use the `.env` file in the project root to set the environment variables.
+
+4. **Run the Data Pipeline:**
+   - Execute `docker-compose up` in the terminal to start the containers and run the data pipeline.
+
+5. **Access Apache Airflow Web UI:**
+   - Open your web browser and go to `localhost:8080` to access the Apache Airflow Web UI.
+   - Start the relevant DAGs `core_api_tf`, `arxiv_api_tf`, and `keywords_dag_tf` to extract, process, and load the information.
+
+6. **Explore Visualizations:**
+
+   - **Static Plots:**
+     - Open the Jupyter notebook `/visualization/visualizations.ipynb` to view the static plots.
+
+   - **Interactive Plots:**
+     - Once the DAGs have completed their tasks, access the Jupyter server running locally at `localhost:8888`.
+     - Utilize the Jupyter notebook `/visualization/interactive_visualizations.ipynb` to explore interactive plots.
+     - Adjust parameters within the notebook to dynamically select and display specific data.
+
+By following these steps, you can run the entire project locally, extract meaningful insights from scientific paper data, and explore both pre-computed and interactive visualizations.
 
 ## Project Structure:
 
