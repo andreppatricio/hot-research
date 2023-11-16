@@ -43,7 +43,6 @@
 #                                Default: ''d
 #
 # Feel free to modify this file to suit your needs.
-# TODO: make necessary changes for production (user and passwords)
 ---
 version: '3.8'
 x-airflow-common:
